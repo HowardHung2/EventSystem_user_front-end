@@ -1,38 +1,41 @@
-# vue-project
+# EventSystem_user_front-end
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 + Vite frontend for the Event System user app.
 
-## Recommended IDE Setup
+## Project Structure
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- `src/` Vue app source (`main.js`, `App.vue`, shared services)
+- `public/` static assets copied to build output
+- `index.html` Vite entry HTML
+- `vite.config.js` Vite config
+- `config.example.env` / `config.dev.env` / `config.prod.env` env templates
 
-## Recommended Browser Setup
+## Environment
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+Vite exposes `import.meta.env` variables with a `VITE_` prefix. This project reads:
 
-## Customize configuration
+- `ROOT_URL` / `VITE_ROOT_URL` (API base)
+- `ACCESS_TOKEN_KEY` / `VITE_ACCESS_TOKEN_KEY` (localStorage key)
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+If you want Vite to load env values automatically, copy one of the templates to
+`.env`, `.env.development`, or `.env.production` and use the `VITE_` variants.
 
-## Project Setup
+## Scripts
 
 ```sh
 npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
 npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
 npm run build
+npm run preview
+npm run format
+npm run format:check
 ```
+
+## Git Hooks
+
+Pre-commit runs `lint-staged` with Prettier to auto-format staged files.
+Run `npm install` once to enable Husky hooks.
+
+## Editor
+
+VS Code + Vue (Official) extension is recommended.
