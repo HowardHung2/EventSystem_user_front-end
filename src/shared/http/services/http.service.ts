@@ -1,5 +1,5 @@
-import { authService } from '@/shared/auth/services/auth.service'
-import { ApiOptions, ApiResponse } from '../models/http.modles'
+import { tokenService } from '@/shared/auth/services/token.service'
+import type { ApiOptions, ApiResponse } from '../models/http.modles'
 
 const ROOT_URL = import.meta.env.ROOT_URL ?? ''
 
@@ -19,7 +19,7 @@ class HttpService {
     endpoint: string,
     options: ApiOptions = {},
   ): Promise<ApiResponse<T>> {
-    const token = authService.getToken()
+    const token = tokenService.get()
 
     const defaultHeaders: HeadersInit = {
       'Content-Type': 'application/json',
