@@ -1,19 +1,10 @@
 import { httpService } from '@/shared/http/services/http.service'
-import { LoginData, LoginPayload, TokenStore } from '../models/auth.model'
+import { tokenService } from './token.service'
+import type { LoginData, LoginPayload } from '../models/auth.model'
 
-const ACCESS_TOKEN_KEY =
-  import.meta.env.VITE_ACCESS_TOKEN_KEY ??
-  import.meta.env.ACCESS_TOKEN_KEY ??
-  'access_token'
 const API_CATEGORY = 'auth'
 
 class AuthService {
-  private tokenStore: TokenStore = {
-    get: () => localStorage.getItem(ACCESS_TOKEN_KEY),
-    set: (token) => localStorage.setItem(ACCESS_TOKEN_KEY, token),
-    clear: () => localStorage.removeItem(ACCESS_TOKEN_KEY),
-  }
-
   private extractToken(data: LoginData | null | undefined) {
     if (!data) {
       return null
@@ -22,7 +13,7 @@ class AuthService {
   }
 
   getToken() {
-    return this.tokenStore.get()
+    return tokenService.get()
   }
 
   async login(payload: LoginPayload) {
@@ -34,7 +25,7 @@ class AuthService {
 
     const token = this.extractToken(res.data)
     if (token) {
-      this.tokenStore.set(token)
+      tokenService.set(token)
     }
 
     return res
@@ -48,7 +39,7 @@ class AuthService {
 
     const token = this.extractToken(res.data)
     if (res.status && token) {
-      this.tokenStore.set(token)
+      tokenService.set(token)
       return res
     }
 
@@ -60,11 +51,11 @@ class AuthService {
   }
 
   logout() {
-    this.tokenStore.clear()
+    tokenService.clear()
   }
 
   isLoggedIn() {
-    return Boolean(this.tokenStore.get())
+    return Boolean(tokenService.get())
   }
 }
 
