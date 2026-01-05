@@ -2,8 +2,8 @@
 import { AppLayout } from '@/shared/layout'
 import { ThemeSettings } from '@/shared/theme'
 import { HomePage } from './home'
-import { NAV_ITEMS } from './models/app.constants'
-import { useAppRouter } from './services/app-router.service'
+import { NAV_ITEMS } from './app.constants'
+import { useAppRouter } from './app-router.service'
 
 const routes = {
   '/': HomePage,
