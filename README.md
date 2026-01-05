@@ -38,4 +38,4 @@ Run `npm install` once to enable Husky hooks.
 
 ## Editor
 
-VS Code + Vue (Official) extension is recommended.
+VS Code + Vue (Official) extension is recommended..
