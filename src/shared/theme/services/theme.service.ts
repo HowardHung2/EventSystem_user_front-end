@@ -27,6 +27,23 @@ const layoutDensity = ref<LayoutDensity>(
 )
 
 export function useTheme() {
+  document.documentElement.style.setProperty(
+    '--el-card-bg-color',
+    'var(--bg-card)',
+  )
+  document.documentElement.style.setProperty(
+    '--el-border-color',
+    'var(--border-color)',
+  )
+  document.documentElement.style.setProperty(
+    '--el-text-color-regular',
+    'var(--text-main)',
+  )
+  document.documentElement.style.setProperty(
+    '--el-text-color-primary',
+    'var(--text-header)',
+  )
+
   // Actions
   const setTheme = (hex: string) => {
     currentColor.value = hex
@@ -52,6 +69,7 @@ export function useTheme() {
     currentColor,
     (newColor) => {
       document.documentElement.style.setProperty('--primary-color', newColor)
+      document.documentElement.style.setProperty('--el-color-primary', newColor)
       localStorage.setItem(STORAGE_KEYS.COLOR, newColor)
     },
     { immediate: true },
@@ -73,6 +91,22 @@ export function useTheme() {
         newColors.error,
       )
       document.documentElement.style.setProperty('--color-info', newColors.info)
+      document.documentElement.style.setProperty(
+        '--el-color-success',
+        newColors.success,
+      )
+      document.documentElement.style.setProperty(
+        '--el-color-warning',
+        newColors.warning,
+      )
+      document.documentElement.style.setProperty(
+        '--el-color-danger',
+        newColors.error,
+      )
+      document.documentElement.style.setProperty(
+        '--el-color-info',
+        newColors.info,
+      )
       localStorage.setItem(
         STORAGE_KEYS.SEMANTIC_COLORS,
         JSON.stringify(newColors),
