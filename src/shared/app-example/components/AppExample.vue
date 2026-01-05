@@ -79,4 +79,14 @@ const userDisplayName = '陌生人'
   font-size: 0.9rem;
   color: var(--text-header);
 }
+
+@media (max-width: 768px) {
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+}
 </style>

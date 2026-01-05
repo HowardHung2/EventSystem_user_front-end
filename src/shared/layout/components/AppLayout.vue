@@ -22,7 +22,8 @@ const emit = defineEmits<{
   (e: 'update:activeKey', key: string): void
 }>()
 
-const { isPinned, isHovering, togglePinned, setHovering } = useLayout()
+const { isPinned, isHovering, isMobile, togglePinned, setPinned, setHovering } =
+  useLayout()
 
 const activeMenu = computed(
   () => props.activeKey ?? props.navItems[0]?.key ?? '',
@@ -36,9 +37,14 @@ const activeLabel = computed(() => {
 const onSelect = (key: string) => {
   emit('select', key)
   emit('update:activeKey', key)
+  if (isMobile.value) {
+    setPinned(false)
+  }
 }
 
-const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
+const isCollapsed = computed(() =>
+  isMobile.value ? !isPinned.value : !isPinned.value && !isHovering.value,
+)
 </script>
 
 <template>
@@ -55,7 +61,11 @@ const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
     />
 
     <el-container class="app-content" direction="vertical">
-      <Header :title="activeLabel">
+      <Header
+        :title="activeLabel"
+        :show-menu-button="isMobile"
+        @toggle-menu="togglePinned"
+      >
         <template v-if="$slots['header-left']" #left>
           <slot name="header-left"></slot>
         </template>
@@ -68,6 +78,12 @@ const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
         <slot></slot>
       </el-main>
     </el-container>
+
+    <div
+      v-if="isMobile && !isCollapsed"
+      class="menu-overlay"
+      @click="setPinned(false)"
+    ></div>
   </el-container>
 </template>
 
@@ -91,5 +107,18 @@ const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
   min-height: 0;
   overflow: hidden;
   height: 100%;
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 150;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 1rem;
+  }
 }
 </style>

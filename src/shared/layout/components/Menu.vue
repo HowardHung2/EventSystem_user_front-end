@@ -190,4 +190,24 @@ const onTogglePin = () => {
 .app-aside.collapsed :deep(.el-menu--collapse) {
   width: 100%;
 }
+
+@media (max-width: 768px) {
+  .app-aside {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 200;
+    box-shadow: 8px 0 16px rgba(0, 0, 0, 0.12);
+    transform: translateX(0);
+  }
+
+  .app-aside.collapsed {
+    transform: translateX(-100%);
+  }
+
+  .app-aside.collapsed .pin-btn {
+    display: inline-flex;
+  }
+}
 </style>
