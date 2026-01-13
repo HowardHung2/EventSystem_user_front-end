@@ -37,23 +37,24 @@ const activeLabel = computed(() => {
 const onSelect = (key: string) => {
   emit('select', key)
   emit('update:activeKey', key)
-  if (isMobile.value) {
-    setPinned(false)
-  }
 }
 
 const isCollapsed = computed(() =>
-  isMobile.value ? !isPinned.value : !isPinned.value && !isHovering.value,
+  isMobile.value ? false : !isPinned.value && !isHovering.value,
 )
 </script>
 
 <template>
-  <el-container class="app-shell" :class="{ collapsed: isCollapsed }">
+  <el-container
+    class="app-shell"
+    :class="{ collapsed: isCollapsed, mobile: isMobile }"
+  >
     <Menu
       :nav-items="navItems"
       :active-key="activeMenu"
       :is-collapsed="isCollapsed"
       :is-pinned="isPinned"
+      :is-mobile="isMobile"
       :title="title"
       @select="onSelect"
       @toggle-pin="togglePinned"
@@ -63,7 +64,7 @@ const isCollapsed = computed(() =>
     <el-container class="app-content" direction="vertical">
       <Header
         :title="activeLabel"
-        :show-menu-button="isMobile"
+        :show-menu-button="false"
         @toggle-menu="togglePinned"
       >
         <template v-if="$slots['header-left']" #left>
@@ -78,12 +79,6 @@ const isCollapsed = computed(() =>
         <slot></slot>
       </el-main>
     </el-container>
-
-    <div
-      v-if="isMobile && !isCollapsed"
-      class="menu-overlay"
-      @click="setPinned(false)"
-    ></div>
   </el-container>
 </template>
 
@@ -109,14 +104,11 @@ const isCollapsed = computed(() =>
   height: 100%;
 }
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 150;
-}
-
 @media (max-width: 768px) {
+  .app-shell.mobile .app-main {
+    padding-bottom: calc(1rem + 64px);
+  }
+
   .app-main {
     padding: 1rem;
   }

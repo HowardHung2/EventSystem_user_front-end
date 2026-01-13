@@ -82,4 +82,19 @@ const emit = defineEmits<{
   align-items: center;
   gap: 0.5rem;
 }
+
+@media (max-width: 768px) {
+  .app-header {
+    height: 56px;
+    padding: 0 0.75rem;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  .header-right {
+    gap: 0.25rem;
+  }
+}
 </style>
