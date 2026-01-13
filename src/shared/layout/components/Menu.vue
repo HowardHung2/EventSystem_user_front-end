@@ -55,7 +55,7 @@ const onTogglePin = () => {
       :default-active="activeKey"
       :collapse="isCollapsed"
       :collapse-transition="false"
-      @select="(key) => emit('select', String(key))"
+      @select="(key: string) => emit('select', key)"
     >
       <el-menu-item
         v-for="item in navItems"
