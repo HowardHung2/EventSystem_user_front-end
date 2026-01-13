@@ -1,3 +1,5 @@
+// 登入資料（Model）
+
 export type TokenStore = {
   get: () => string | null
   set: (token: string) => void

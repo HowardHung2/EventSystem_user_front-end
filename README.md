@@ -1,28 +1,61 @@
-# EventSystem_user_front-end
+# 🚀 EventSystem 前端開發手冊
 
-Vue 3 + Vite frontend for the Event System user app.
+### 📂 入口與核心設定
 
-## Project Structure
+| 檔案路徑                            | 用途說明                                                                                        | 重要性 |
+| :---------------------------------- | :---------------------------------------------------------------------------------------------- | :----- |
+| **`index.html`**                    | 網頁的唯一入口，載入 CSS 與 `main.js`。**不要隨意移動它**。                                     |
+| **`src/main.js`**                   | Vue 啟動檔。負責載入 Element Plus 套件並掛載 `App.vue`。                                        |
+| **`src/app/App.vue`**               | **全站總指揮**。負責判斷「有無登入」，沒登入顯示 `LoginPage`，有登入顯示 `AppLayout` (主畫面)。 |
+| **`src/app/app-router.service.ts`** | **自製路由服務**。控制網頁網址跳轉 (SPA)，不依賴外部Router 套件。                               |
 
-- `src/` Vue app source (`main.js`, `App.vue`, shared services)
-- `public/` static assets copied to build output
-- `index.html` Vite entry HTML
-- `vite.config.js` Vite config
-- `config.example.env` / `config.dev.env` / `config.prod.env` env templates
+### 🔐 認證模組 (Auth Module)
 
-## Environment
+_位於 `src/shared/auth/`_
 
-Vite exposes `import.meta.env` variables with a `VITE_` prefix. This project reads:
+| 檔案路徑                        | 用途說明                                                                                      | 修改時機         |
+| :------------------------------ | :-------------------------------------------------------------------------------------------- | :--------------- |
+| **`components/LoginPage.vue`**  | **登入畫面 UI**。包含帳號密碼輸入框、Logo 樣式。只負責收集資料，驗證邏輯交給 Service。        | 修改登入頁外觀時 |
+| **`services/auth.service.ts`**  | **登入邏輯核心**。目前設定為「模擬模式」(Mock)，密碼固定為 `123456`。**未來接後端要改這裡**。 | 串接 API 時      |
+| **`services/token.service.ts`** | 負責把 Token 存入瀏覽器 (LocalStorage)。                                                      | 通常不用動       |
+| **`models/auth.model.ts`**      | TypeScript 型別定義。規定後端回傳的 User 資料長什麼樣子。                                     | 後端欄位變更時   |
 
-- `ROOT_URL` / `VITE_ROOT_URL` (API base)
-- `ACCESS_TOKEN_KEY` / `VITE_ACCESS_TOKEN_KEY` (localStorage key)
+### 🏠 功能頁面 (Features)
 
-If you want Vite to load env values automatically, copy one of the templates to
-`.env`, `.env.development`, or `.env.production` and use the `VITE_` variants.
+_位於 `src/app/`_
 
-## Scripts
+| **`home/components/HomePage.vue`** | **首頁儀表板**。包含歡迎橫幅、最新活動列表。目前使用 `setTimeout` 模擬非同步資料載入。 |
+| **`app.constants.ts`** | 定義全站共用常數，例如導覽列 (Menu) 的文字與圖示設定。 |
 
-```sh
+---
+
+### 🔹 目前的開發模式 (Mock Mode)
+
+為了讓前端能獨立開發，目前所有的 API 請求都被 `setTimeout` 攔截並回傳假資料。
+
+- **登入密碼**：固定為 `123456`。
+- **活動列表**：由 `HomePage.vue` 中的假陣列產生。
+
+### 🔹 未來如何切換成真實後端？
+
+#### 1. 啟用真實登入 API
+
+打開 `src/shared/auth/services/auth.service.ts`：
+
+```typescript
+async login(payload: LoginPayload) {
+  // 1. 把下面的 [模擬後端模式] 程式碼註解掉或刪除
+  // ...
+
+  // 2. 把原本註解起來的 httpService 打開
+  const endpoint = `${API_CATEGORY}/login`
+  const res = await httpService.fetch<LoginData>(endpoint, {
+    method: 'POST',
+    body: payload,
+  })
+  return res
+}
+
 npm install
 npm run dev
 npm run build
@@ -30,12 +63,3 @@ npm run preview
 npm run format
 npm run format:check
 ```
-
-## Git Hooks
-
-Pre-commit runs `lint-staged` with Prettier to auto-format staged files.
-Run `npm install` once to enable Husky hooks.
-
-## Editor
-
-VS Code + Vue (Official) extension is recommended..

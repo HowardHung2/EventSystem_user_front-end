@@ -62,8 +62,7 @@ const asideWidth = computed(() =>
       :default-active="activeKey"
       :collapse="!props.isMobile && isCollapsed"
       :collapse-transition="false"
-      :mode="props.isMobile ? 'horizontal' : 'vertical'"
-      @select="(key) => emit('select', String(key))"
+      @select="(key: string) => emit('select', key)"
     >
       <el-menu-item
         v-for="item in navItems"
