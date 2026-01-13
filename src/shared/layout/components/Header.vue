@@ -2,18 +2,36 @@
 withDefaults(
   defineProps<{
     title?: string
+    showMenuButton?: boolean
   }>(),
   {
     title: '',
+    showMenuButton: false,
   },
 )
+
+const emit = defineEmits<{
+  (e: 'toggle-menu'): void
+}>()
 </script>
 
 <template>
   <el-header class="app-header">
     <div class="header-left">
       <slot name="left">
-        <h1 class="page-title">{{ title }}</h1>
+        <div class="title-row">
+          <el-button
+            v-if="showMenuButton"
+            class="menu-btn"
+            text
+            @click="emit('toggle-menu')"
+          >
+            <span class="material-symbols-outlined" aria-hidden="true">
+              menu
+            </span>
+          </el-button>
+          <h1 class="page-title">{{ title }}</h1>
+        </div>
       </slot>
     </div>
     <div class="header-right">
@@ -41,6 +59,18 @@ withDefaults(
   gap: 0.75rem;
 }
 
+.title-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-btn {
+  padding: 0;
+  width: 36px;
+  height: 36px;
+}
+
 .page-title {
   margin: 0;
   font-size: 1.1rem;
@@ -51,5 +81,20 @@ withDefaults(
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    height: 56px;
+    padding: 0 0.75rem;
+  }
+
+  .page-title {
+    font-size: 1rem;
+  }
+
+  .header-right {
+    gap: 0.25rem;
+  }
 }
 </style>

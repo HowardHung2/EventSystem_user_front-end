@@ -1,17 +1,20 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { NavItem } from '../models/layout.model'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     navItems: NavItem[]
     activeKey: string
     isCollapsed: boolean
     isPinned: boolean
+    isMobile: boolean
     title?: string
   }>(),
   {
     navItems: () => [],
     title: 'Event System',
+    isMobile: false,
   },
 )
 
@@ -24,13 +27,17 @@ const emit = defineEmits<{
 const onTogglePin = () => {
   emit('toggle-pin')
 }
+
+const asideWidth = computed(() =>
+  props.isMobile ? '100%' : props.isCollapsed ? '72px' : '220px',
+)
 </script>
 
 <template>
   <el-aside
     class="app-aside"
-    :class="{ collapsed: isCollapsed }"
-    :width="isCollapsed ? '72px' : '220px'"
+    :class="{ collapsed: isCollapsed, mobile: props.isMobile }"
+    :width="asideWidth"
     @mouseenter="emit('hover', true)"
     @mouseleave="emit('hover', false)"
   >
@@ -53,9 +60,9 @@ const onTogglePin = () => {
     <el-menu
       class="aside-menu"
       :default-active="activeKey"
-      :collapse="isCollapsed"
+      :collapse="!props.isMobile && isCollapsed"
       :collapse-transition="false"
-      @select="(key) => emit('select', String(key))"
+      @select="(key: string) => emit('select', key)"
     >
       <el-menu-item
         v-for="item in navItems"
@@ -189,5 +196,64 @@ const onTogglePin = () => {
 
 .app-aside.collapsed :deep(.el-menu--collapse) {
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .app-aside {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    top: auto;
+    height: 64px;
+    width: 100%;
+    z-index: 200;
+    box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.12);
+    border-right: none;
+    border-top: 1px solid var(--border-color);
+    transform: translateX(0);
+  }
+
+  .app-aside.collapsed {
+    transform: translateX(0);
+  }
+
+  .app-aside.collapsed .pin-btn {
+    display: inline-flex;
+  }
+
+  .aside-top {
+    display: none;
+  }
+
+  .aside-menu {
+    height: 100%;
+  }
+
+  .app-aside :deep(.el-menu--horizontal) {
+    border-bottom: none;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .app-aside :deep(.el-menu--horizontal > .el-menu-item) {
+    height: 100%;
+    line-height: 1.1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.5rem;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .app-aside :deep(.el-menu--horizontal > .el-menu-item.is-active) {
+    background: transparent;
+  }
+
+  .menu-icon {
+    margin-right: 0;
+  }
 }
 </style>

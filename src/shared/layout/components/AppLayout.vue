@@ -22,7 +22,8 @@ const emit = defineEmits<{
   (e: 'update:activeKey', key: string): void
 }>()
 
-const { isPinned, isHovering, togglePinned, setHovering } = useLayout()
+const { isPinned, isHovering, isMobile, togglePinned, setPinned, setHovering } =
+  useLayout()
 
 const activeMenu = computed(
   () => props.activeKey ?? props.navItems[0]?.key ?? '',
@@ -38,16 +39,22 @@ const onSelect = (key: string) => {
   emit('update:activeKey', key)
 }
 
-const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
+const isCollapsed = computed(() =>
+  isMobile.value ? false : !isPinned.value && !isHovering.value,
+)
 </script>
 
 <template>
-  <el-container class="app-shell" :class="{ collapsed: isCollapsed }">
+  <el-container
+    class="app-shell"
+    :class="{ collapsed: isCollapsed, mobile: isMobile }"
+  >
     <Menu
       :nav-items="navItems"
       :active-key="activeMenu"
       :is-collapsed="isCollapsed"
       :is-pinned="isPinned"
+      :is-mobile="isMobile"
       :title="title"
       @select="onSelect"
       @toggle-pin="togglePinned"
@@ -55,7 +62,11 @@ const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
     />
 
     <el-container class="app-content" direction="vertical">
-      <Header :title="activeLabel">
+      <Header
+        :title="activeLabel"
+        :show-menu-button="false"
+        @toggle-menu="togglePinned"
+      >
         <template v-if="$slots['header-left']" #left>
           <slot name="header-left"></slot>
         </template>
@@ -91,5 +102,15 @@ const isCollapsed = computed(() => !isPinned.value && !isHovering.value)
   min-height: 0;
   overflow: hidden;
   height: 100%;
+}
+
+@media (max-width: 768px) {
+  .app-shell.mobile .app-main {
+    padding-bottom: calc(1rem + 64px);
+  }
+
+  .app-main {
+    padding: 1rem;
+  }
 }
 </style>
