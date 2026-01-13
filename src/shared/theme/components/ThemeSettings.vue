@@ -62,7 +62,10 @@ const semanticRoles: { key: keyof SemanticColors; label: string }[] = [
               <el-color-picker
                 :model-value="semanticColors[role.key]"
                 :predefine="colors.map((color) => color.hex)"
-                @change="(value) => value && setSemanticColor(role.key, value)"
+                @change="
+                  (value: string | null) =>
+                    value && setSemanticColor(role.key, value)
+                "
               />
             </el-form-item>
           </el-form>
@@ -97,7 +100,7 @@ const semanticRoles: { key: keyof SemanticColors; label: string }[] = [
             <el-color-picker
               :model-value="currentColor"
               :predefine="colors.map((color) => color.hex)"
-              @change="(value) => value && setTheme(value)"
+              @change="(value: string | null) => value && setTheme(value)"
             />
           </el-space>
         </el-card>
